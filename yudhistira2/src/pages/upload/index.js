@@ -1,16 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
-import { Inter } from "next/font/google";
 import { MdCloudUpload, MdDelete } from "react-icons/md";
 import { AiFillFilePdf } from "react-icons/ai";
-import { analytics } from "./firebase/firebase-config";
+import { analytics } from "@/pages/firebase/firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home() {
+export default function Uploader() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("No selected file");
   const [fileupload, setfileupload] = useState(null);
@@ -44,6 +40,10 @@ export default function Home() {
     handleFileChange(files);
   };
 
+  const handleFileNameChange = (e) => {
+    setFileName(e.target.value);
+  };
+
   const upload = async () => {
     console.log(fileupload);
     if (fileupload !== null) {
@@ -68,8 +68,6 @@ export default function Home() {
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          <label htmlFor="sopName">Nama SOP</label>
-          <input type="text" id="sopName" />
           <input
             type="file"
             accept="application/pdf"
@@ -100,6 +98,15 @@ export default function Home() {
           />
         </span>
       </section>
+      <div className="file-uploader-form">
+        <input
+          type="text"
+          value={fileName}
+          onChange={handleFileNameChange}
+          placeholder="Enter file name"
+          required
+        />
+      </div>
       <button onClick={upload}>Upload</button>
     </main>
   );
