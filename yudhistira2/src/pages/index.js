@@ -1,14 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import { useState } from "react";
 import { Inter } from "next/font/google";
 import { MdCloudUpload, MdDelete } from "react-icons/md";
 import { AiFillFilePdf } from "react-icons/ai";
+import { analytics } from "./firebase/firebase-config";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("No selected file");
+  const [fileupload, setfileupload] = useState(null);
 
   const handleFileChange = (files) => {
     if (files && files[0]) {
@@ -25,6 +30,7 @@ export default function Home() {
       }
       setFileName(selectedFile.name);
       setFile(selectedFile);
+      setfileupload(selectedFile);
     }
   };
 
@@ -37,6 +43,19 @@ export default function Home() {
     const files = e.dataTransfer.files;
     handleFileChange(files);
   };
+
+  const upload = async () => {
+    console.log(fileupload);
+    if (fileupload !== null) {
+      const fileref = ref(analytics, `sop/${fileName}`);
+      uploadBytes(fileref, fileupload).then((data) => {
+        getDownloadURL(data.ref).then((ur) => {
+          console.log("url", ur);
+        });
+      });
+    }
+  };
+
   return (
     <main>
       <div className="form-bok">
@@ -76,6 +95,7 @@ export default function Home() {
           />
         </span>
       </section>
+      <button onClick={upload}>Upload</button>
     </main>
   );
 }
