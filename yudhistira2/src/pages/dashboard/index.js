@@ -1,22 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { storage } from "@/pages/firebase/firebase-config";
+import { storage } from "../firebase/firebase-config";
 import { ref, getDownloadURL, listAll } from "firebase/storage";
 
 export default function Dashboard() {
-  const [sopList, setSopList] = useState([]);
+  const [fileList, setFileList] = useState([]);
 
-  const imageListRef = ref(storage, `sop/SOP Finance`);
+  const imageListRef = ref(storage, `sop/`);
 
   useEffect(() => {
-    setSopList([]);
     listAll(imageListRef).then((response) => {
-      response.items.forEach((item) => {
-        getDownloadURL(item).then((url) => {
-          setSopList((prev) => [...prev, url]);
-        });
+      const itemsWithUrls = response.items.map(async (item) => {
+        const url = await getDownloadURL(item);
+        return { name: item.name, url };
       });
+
+      Promise.all(itemsWithUrls).then((items) => setFileList(items));
     });
   }, []);
 
@@ -25,8 +25,13 @@ export default function Dashboard() {
   return (
     <div>
       <h1>{pageHeading}</h1>
-      {sopList.map((url) => {
-        return <a href={url}>link</a>;
+      {fileList.map((item) => {
+        return (
+          <div>
+            <p>{item.name}</p>
+            <a href={item.url}>test</a>
+          </div>
+        );
       })}
     </div>
   );
