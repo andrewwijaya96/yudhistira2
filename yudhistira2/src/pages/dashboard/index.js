@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { storage } from "../firebase/firebase-config";
-import { ref, getDownloadURL, listAll } from "firebase/storage";
+import { ref, getDownloadURL, listAll, getMetadata } from "firebase/storage";
 
 export default function Dashboard() {
   const [fileList, setFileList] = useState([]);
@@ -13,7 +13,9 @@ export default function Dashboard() {
     listAll(imageListRef).then((response) => {
       const itemsWithUrls = response.items.map(async (item) => {
         const url = await getDownloadURL(item);
-        return { name: item.name, url };
+        const metadata = await getMetadata(item);
+        const fileVersion = metadata.customMetadata.version;
+        return { name: item.name, url, fileVersion };
       });
 
       Promise.all(itemsWithUrls).then((items) => setFileList(items));
@@ -29,6 +31,7 @@ export default function Dashboard() {
         return (
           <div>
             <p>{item.name}</p>
+            <p>{item.fileVersion}</p>
             <a href={item.url}>test</a>
           </div>
         );

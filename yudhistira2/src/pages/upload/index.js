@@ -10,6 +10,7 @@ import { v4 } from "uuid";
 export default function Uploader() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("No selected file");
+  const [fileVersion, setFileVersion] = useState("1.1.0");
 
   const handleFileChange = (files) => {
     if (files && files[0]) {
@@ -39,6 +40,10 @@ export default function Uploader() {
     handleFileChange(files);
   };
 
+  const handleFileVersionChange = (e) => {
+    setFileVersion(e.target.value);
+  };
+
   const handleFileNameChange = (e) => {
     setFileName(e.target.value);
   };
@@ -46,8 +51,13 @@ export default function Uploader() {
   const upload = async () => {
     console.log(file);
     if (file !== null) {
-      const fileref = ref(storage, `sop/${fileName}/${file.name + v4()}`);
-      uploadBytes(fileref, file).then((data) => {
+      const fileref = ref(storage, `sop/${v4() + fileVersion + file.name}`);
+      const metadata = {
+        customMetadata: {
+          version: fileVersion,
+        },
+      };
+      uploadBytes(fileref, file, metadata).then((data) => {
         getDownloadURL(data.ref).then((ur) => {
           console.log("url", ur);
         });
@@ -98,9 +108,16 @@ export default function Uploader() {
       <div className="file-uploader-form">
         <input
           type="text"
-          value={fileName}
           onChange={handleFileNameChange}
           placeholder="Enter file name"
+          required
+        />
+      </div>
+      <div className="file-uploader-form">
+        <input
+          type="text"
+          onChange={handleFileVersionChange}
+          placeholder="version name"
           required
         />
       </div>
