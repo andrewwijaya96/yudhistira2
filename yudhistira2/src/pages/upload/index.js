@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { MdCloudUpload, MdDelete } from "react-icons/md";
 import { AiFillFilePdf } from "react-icons/ai";
-import { analytics } from "@/pages/firebase/firebase-config";
+import { storage } from "@/pages/firebase/firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 
 export default function Uploader() {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("No selected file");
-  const [fileupload, setfileupload] = useState(null);
 
   const handleFileChange = (files) => {
     if (files && files[0]) {
@@ -26,7 +26,6 @@ export default function Uploader() {
       }
       setFileName(selectedFile.name);
       setFile(selectedFile);
-      setfileupload(selectedFile);
     }
   };
 
@@ -45,18 +44,16 @@ export default function Uploader() {
   };
 
   const upload = async () => {
-    console.log(fileupload);
-    if (fileupload !== null) {
-      const fileref = ref(
-        analytics,
-        `sop/${fileName}/${fileupload.lastModified}`
-      );
-      uploadBytes(fileref, fileupload).then((data) => {
+    console.log(file);
+    if (file !== null) {
+      const fileref = ref(storage, `sop/${fileName}/${file.name + v4()}`);
+      uploadBytes(fileref, file).then((data) => {
         getDownloadURL(data.ref).then((ur) => {
           console.log("url", ur);
         });
       });
     }
+    alert("SOP Uploaded");
   };
 
   return (
