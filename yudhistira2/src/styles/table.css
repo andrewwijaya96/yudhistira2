@@ -1,0 +1,32 @@
+/* @import url("../../styles/responsive.css"); */
+
+.dataTable .dataGrid {
+  display: flex;
+  background: #ffffff;
+  padding: 20px;
+  width: auto;
+}
+
+.dataTable .dataGrid .MuiDataGrid-toolbarContainer {
+  flex-direction: row-reverse;
+}
+
+.dataTable .dataGrid img {
+  display: flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dataTable .dataGrid .action {
+  display: flex;
+  gap: 15px;
+}
+
+.dataTable .dataGrid .action img {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}

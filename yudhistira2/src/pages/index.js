@@ -1,81 +1,62 @@
-import Image from "next/image";
-import { useState } from "react";
-import { Inter } from "next/font/google";
-import { MdCloudUpload, MdDelete } from "react-icons/md";
-import { AiFillFilePdf } from "react-icons/ai";
+// index.js
+import React, { useEffect, useState } from "react";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import Navbar from "@/components/navbar/navbar";
+import Footer from "@/components/footer/footer";
+import Menu from "@/components/menu/menu";
+import Upload from "@/pages/upload/upload";
+import Home from "@/pages/homepage/homepage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const inter = Inter({ subsets: ["latin"] });
+const queryClient = new QueryClient();
 
-export default function Home() {
-  const [file, setFile] = useState(null);
-  const [fileName, setFileName] = useState("No selected file");
+function App() {
+  const [router, setRouter] = useState(null);
 
-  const handleFileChange = (files) => {
-    if (files && files[0]) {
-      const selectedFile = files[0];
-      if (selectedFile.size > 3 * 1024 * 1024) {
-        // File size exceeds 3MB limit
-        alert("File size exceeds 3MB limit.");
-        return;
-      }
-      if (selectedFile.type !== "application/pdf") {
-        // Invalid file type
-        alert("Only PDF files are allowed.");
-        return;
-      }
-      setFileName(selectedFile.name);
-      setFile(selectedFile);
-    }
-  };
+  useEffect(() => {
+    const routerInstance = createBrowserRouter([
+      {
+        path: "/",
+        element: (
+          <div className="main">
+            <Navbar />
+            <div className="container">
+              <div className="menuContainer">
+                <Menu />
+              </div>
+              <div className="contentContainer">
+                <QueryClientProvider client={queryClient}>
+                  <Outlet />
+                </QueryClientProvider>
+              </div>
+            </div>
+            <Footer />
+          </div>
+        ),
+        children: [
+          {
+            path: "/home",
+            element: <Home />,
+          },
+          {
+            path: "/upload",
+            element: <Upload />,
+          },
+        ],
+      },
+    ]);
+    setRouter(routerInstance);
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
+    return () => {
+      // Cleanup function if necessary
+    };
+  }, []);
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    handleFileChange(files);
-  };
-  return (
-    <main>
-      <div className="form-bok">
-        <form
-          action=""
-          onClick={() => document.querySelector(".input-field").click()}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-        >
-          <input
-            type="file"
-            accept="application/pdf"
-            className="input-field"
-            hidden
-            onChange={({ target: { files } }) => handleFileChange(files)}
-          />
+  if (!router) {
+    return null; // or any loading indicator
+  }
 
-          {file ? (
-            <AiFillFilePdf color="#1475cf" size={60} />
-          ) : (
-            <>
-              <MdCloudUpload color="#1475cf" size={60} />
-              <p>Browse File to upload</p>
-            </>
-          )}
-        </form>
-      </div>
-      <section className="uploaded-row">
-        <AiFillFilePdf color="#1475cf" />
-        <span className="upload-content">
-          {fileName} -
-          <MdDelete
-            onClick={() => {
-              setFileName("No selected file");
-              setFile(null);
-            }}
-          />
-        </span>
-      </section>
-    </main>
-  );
+  return <RouterProvider router={router} />;
 }
+
+export default App;

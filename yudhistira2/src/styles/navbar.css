@@ -1,0 +1,17 @@
+/* @import url("../../styles/responsive.css"); */
+
+.navbar {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #384256;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  gap: 10px;
+}

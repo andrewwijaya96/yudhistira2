@@ -1,0 +1,45 @@
+/* variables.scss */
+/* Place your variables here */
+
+/* responsive.scss */
+/* Place your responsive styles here */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.main {
+  font-family: "Inter", sans-serif;
+  /* Replace $main-bg and $main-color with actual color values */
+  background-color: #2a3447;
+  color: white;
+}
+
+.container {
+  height: 100vh;
+  display: flex;
+}
+
+.menuContainer {
+  width: 250px;
+  padding: 10px 20px;
+  border-right: 2px solid #384256;
+}
+
+/* @media (min-width: 1024px) {
+  .menuContainer {
+    width: max-content;
+  }
+} */
+
+.contentContainer {
+  flex: 1;
+  padding: 5px 20px;
+}
