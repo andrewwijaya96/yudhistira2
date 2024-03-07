@@ -51,9 +51,13 @@ export default function Uploader() {
   const upload = async () => {
     console.log(file);
     if (file !== null) {
-      const fileref = ref(storage, `sop/${v4() + fileVersion + file.name}`);
+      const fileref = ref(
+        storage,
+        `sop/${fileName}_${fileVersion}_${v4()}.pdf`
+      );
       const metadata = {
         customMetadata: {
+          sopName: fileName,
           version: fileVersion,
         },
       };

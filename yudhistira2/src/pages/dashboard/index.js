@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { storage } from "../firebase/firebase-config";
 import { ref, getDownloadURL, listAll, getMetadata } from "firebase/storage";
+import { format } from "date-fns";
 
 export default function Dashboard() {
   const [fileList, setFileList] = useState([]);
@@ -14,8 +15,20 @@ export default function Dashboard() {
       const itemsWithUrls = response.items.map(async (item) => {
         const url = await getDownloadURL(item);
         const metadata = await getMetadata(item);
+        const timeCreated = metadata.timeCreated;
+        const formattedTimeCreated = format(
+          timeCreated,
+          "MMMM do yyyy, h:mm:ss a"
+        );
         const fileVersion = metadata.customMetadata.version;
-        return { name: item.name, url, fileVersion };
+        const sopName = metadata.customMetadata.sopName;
+        return {
+          name: item.name,
+          url,
+          fileVersion,
+          sopName,
+          timeCreated: formattedTimeCreated,
+        };
       });
 
       Promise.all(itemsWithUrls).then((items) => setFileList(items));
@@ -30,8 +43,9 @@ export default function Dashboard() {
       {fileList.map((item) => {
         return (
           <div>
-            <p>{item.name}</p>
+            <p>{item.sopName}</p>
             <p>{item.fileVersion}</p>
+            <p>{item.timeCreated}</p>
             <a href={item.url}>test</a>
           </div>
         );
