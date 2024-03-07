@@ -1,0 +1,47 @@
+/* sidebar.css */
+
+.sidebar {
+  padding: 20px;
+  background-color: #222;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 200px; /* Sesuaikan lebar sesuai kebutuhan */
+  z-index: 1000; /* Pastikan sidebar berada di atas konten lain */
+}
+
+/* Styling untuk item di dalam sidebar */
+.sidebar .item {
+  margin-bottom: 20px;
+}
+
+.sidebar .title {
+  font-size: 12px;
+  font-weight: 200;
+  color: #ddd;
+  text-transform: uppercase;
+}
+
+.sidebar .listItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidebar .listItem:hover {
+  background-color: #384256;
+}
+
+.sidebar .listItem img {
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar .listItem .listItemTitle {
+  display: inline;
+}
